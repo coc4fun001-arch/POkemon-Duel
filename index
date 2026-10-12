@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
-<title>Basalt Ring — arena prototype</title>
+<title>Pokemon Duel - Extreme Battle</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -1883,7 +1883,7 @@ const dynLights = [0, 1, 2].map(() => { const l = new THREE.PointLight('#ff8a3c'
 
 /* ================= arenas ================= */
 const ARENAS = {
-  basalt:{ name:'Basalt Ring', boost:'fire', sky:'#93a7b1', fog:[26, 68], hemi:['#dfe9ee', '#3a3025', 0.85], sun:['#fff0da', 0.7], outer:'#36402f',
+  basalt:{ name:'Pokemon Stadium', boost:'fire', sky:'#93a7b1', fog:[26, 68], hemi:['#dfe9ee', '#3a3025', 0.85], sun:['#fff0da', 0.7], outer:'#36402f',
     ground:{ base:'#3d4834', blot:['rgba(90,110,70,.35)', 'rgba(40,48,36,.35)'], floor:'hex', tile:[56, 76, [0, 4, 10]], under:'#30353b', ring:'rgba(232,238,240,.55)', fissure:'#ff9a4a', pools:['#5c8f96', '#2f7684'] },
     props:'columns', propColor:'#30353c', ambient:'steam', river:true, obst:8, grass:6, weather:['sunny','rain'], song:{ seed:7, bpm:152, root:45, mode:'minor' } },
   frost:{ name:'Frost Peak', boost:'ice', sky:'#8fa6b8', fog:[24, 64], hemi:['#d8e6f2', '#4a5c6c', 0.62], sun:['#eef4ff', 0.5], outer:'#9fb2c2', bloomTh:0.97,
