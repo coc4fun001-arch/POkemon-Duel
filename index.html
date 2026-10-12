@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
-<title>Basalt Ring — arena prototype</title>
+<title>Pokemon Duel - Extreme Battle</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -335,6 +335,25 @@ input{font:inherit;color:var(--steam);-webkit-user-select:text;user-select:text}
 .rkres{display:flex;align-items:center;justify-content:center;gap:12px;margin:6px 0}
 .rkres b{display:block;font-family:'Barlow Condensed','Arial Narrow',sans-serif;font-size:30px;color:#ffd166}
 .rkres span{font-size:13px;color:var(--mist)}
+.witem.locked{opacity:.5}.witem.locked::after{content:'\1F512';font-size:16px;margin-left:10px;letter-spacing:0}
+#board{background:linear-gradient(rgba(11,14,18,.88),rgba(11,14,18,.96)),var(--titleimg) center/cover #0b0e12}
+.cdisc{margin:0 0 16px;padding:12px 14px;border-radius:12px;background:rgba(255,209,102,.1);border:1px solid rgba(255,209,102,.35);font-size:14px;line-height:1.5}
+.lbsub{margin-left:auto;font-size:13px;color:var(--mist)}
+.lbhead,.lbrow{display:flex;align-items:center;gap:10px;padding:6px 10px}
+.lbhead{font-size:11px;color:var(--mist);font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+.lblist{display:flex;flex-direction:column;gap:4px}
+.lbrow{border-radius:12px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08)}
+.lbrow.me{background:rgba(255,209,102,.14);border-color:rgba(255,209,102,.5)}
+.lbrow:nth-child(1) .lbn{color:#ffd166}.lbrow:nth-child(2) .lbn{color:#d6dde4}.lbrow:nth-child(3) .lbn{color:#e0a46a}
+.lbn{width:28px;text-align:center;font-family:'Barlow Condensed','Arial Narrow',sans-serif;font-weight:700;font-size:20px}
+.lbav{width:34px;height:34px;flex:none}
+.lbname{flex:1;min-width:0;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lbtier{width:120px;font-size:12px;color:var(--mist);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lbpts{width:52px;text-align:right;font-weight:700;color:#ffd166;font-variant-numeric:tabular-nums}
+.lbwl{width:56px;text-align:right;font-size:12px;color:var(--mist);font-variant-numeric:tabular-nums}
+.lbgap{text-align:center;color:var(--mist);line-height:1}
+@media (max-width:600px){.lbtier{display:none}}
+.protobadge{position:absolute;z-index:2;left:50%;transform:translateX(-50%);top:calc(10px + env(safe-area-inset-top,0px));padding:4px 14px;border-radius:999px;background:rgba(240,80,60,.88);color:#fff;font-weight:700;font-size:12px;letter-spacing:.18em;text-transform:uppercase;box-shadow:0 2px 10px rgba(0,0,0,.4)}
 .netscore{font-family:'Barlow Condensed','Arial Narrow',sans-serif;font-size:34px;font-weight:700;color:#ffd166}
 .onme .chip{font-size:10px;font-weight:700;padding:2px 8px;border-radius:999px;color:#fff;background:var(--tc,#555)}
 .onacts{display:grid;grid-template-columns:auto 1fr;gap:10px;margin-top:14px;align-items:center}
@@ -839,6 +858,7 @@ body.demo #actions,body.demo #stickZone,body.demo #lookZone,body.demo #lockBtn{d
   <div id="rotate"><div><b class="cond">Turn your phone sideways</b><span>The arena plays in landscape.</span></div></div>
 
   <div class="sheet" id="start">
+    <div class="protobadge" id="protoBadge" hidden>Prototype</div>
     <nav class="tmenu smenu" aria-label="Start">
       <button class="tbtn tline primary" id="goContinue" hidden><span>Continue</span></button>
       <button class="tbtn tline" id="goNew"><span>New Game</span></button>
@@ -866,6 +886,7 @@ body.demo #actions,body.demo #stickZone,body.demo #lookZone,body.demo #lockBtn{d
         <button class="witem" data-mode="single" role="option">Single Battle</button>
         <button class="witem" data-mode="survival" role="option">Survival Mode</button>
         <button class="witem" data-mode="online" role="option">Online Battle</button>
+        <button class="witem" data-mode="board" role="option">Leaderboard</button>
         <button class="witem" data-mode="shop" role="option">Shop</button>
         <button class="witem" data-mode="demo" role="option">Demo Battle</button>
         <button class="witem" data-mode="profile" role="option">Player Profile</button>
@@ -977,6 +998,14 @@ body.demo #actions,body.demo #stickZone,body.demo #lookZone,body.demo #lockBtn{d
     <div class="grid" id="stGrid"></div>
   </div>
 
+  <div class="sheet" id="board" hidden>
+    <div class="wrap narrow">
+      <div class="head"><button class="back" id="boardBack">Back</button><h1>Leaderboard</h1><span class="lbsub" id="boardSub"></span></div>
+      <div class="lbhead"><span class="lbn">#</span><span style="width:30px"></span><span style="width:34px"></span><span class="lbname">Trainer</span><span class="lbtier">Tier</span><span class="lbpts">Pts</span><span class="lbwl">W–L</span></div>
+      <div class="lblist" id="boardList"></div>
+    </div>
+  </div>
+
   <div class="sheet" id="online" hidden>
     <div class="wrap narrow">
       <div class="head"><button class="back" id="onBack">Back</button><h1>Online Battle</h1></div>
@@ -1019,17 +1048,19 @@ body.demo #actions,body.demo #stickZone,body.demo #lookZone,body.demo #lockBtn{d
   <div class="sheet" id="credits" hidden>
     <div class="wrap narrow">
       <div class="head"><button class="back" data-nav="start">Back</button><h1>Credits</h1></div>
+      <p class="cdisc">Pokémon Duel: Extreme Battle is a free, non-profit, fan-made game created for fun. It is not affiliated with, sponsored or endorsed by Nintendo, Creatures Inc., GAME FREAK inc. or The Pokémon Company. No money is made from it.</p>
       <dl class="credits">
-        <dt>Game design and development</dt><dd>Yusman, built with Claude by Anthropic.</dd>
-        <dt>Title artwork</dt><dd>Supplied by Yusman for this project.</dd>
-        <dt>Pokémon battle sprites</dt><dd>PMD Sprite Collab and its community artists (<a href="https://sprites.pmdcollab.org/" target="_blank" rel="noopener">sprites.pmdcollab.org</a>, GitHub PMDCollab/SpriteCollab). Each Pokémon's page lists the artists who drew it.</dd>
-        <dt>Trainer avatars</dt><dd>Pokémon Showdown trainer sprites (<a href="https://play.pokemonshowdown.com/sprites/trainers/" target="_blank" rel="noopener">play.pokemonshowdown.com</a>), maintained by the Smogon and Pokémon Showdown community.</dd>
-        <dt>Pokémon data</dt><dd>Base stats, types, type matchups, move power, and the damage formula follow the main series games.</dd>
-        <dt>3D engine</dt><dd>three.js by Ricardo Cabello (mrdoob) and contributors, MIT License.</dd>
-        <dt>Sprite zip loading</dt><dd>JSZip by Stuart Knightley and contributors, MIT License.</dd>
-        <dt>Typefaces</dt><dd>Barlow and Barlow Condensed by Jeremy Tribby, SIL Open Font License, served by Google Fonts.</dd>
-        <dt>Sound effects</dt><dd>Generated live in the browser with the Web Audio API; no recorded audio is used.</dd>
-        <dt>Pokémon</dt><dd>Pokémon and all related names are trademarks of Nintendo, Creatures Inc., GAME FREAK inc., and The Pokémon Company. This is a free, non-commercial fan project and is not affiliated with or endorsed by them.</dd>
+        <dt>Main developer</dt><dd><b>yusmansaidin</b>: game design, development, story and testing.</dd>
+        <dt>Pokémon franchise</dt><dd>Pokémon was created by Satoshi Tajiri, with Ken Sugimori and Junichi Masuda, at GAME FREAK. Pokémon and all related names, characters and music are © and ™ Nintendo, Creatures Inc., GAME FREAK inc. and The Pokémon Company. Thank you to everyone behind the games, anime and cards.</dd>
+        <dt>Battle music</dt><dd>Pokémon the Series: XYZ theme, used as a fan tribute. All rights belong to The Pokémon Company and its composers and performers.</dd>
+        <dt>Pokémon battle sprites</dt><dd>PMD Sprite Collab and its community artists (<a href="https://sprites.pmdcollab.org/" target="_blank" rel="noopener">sprites.pmdcollab.org</a>). Each Pokémon's page lists the artists who drew it.</dd>
+        <dt>Trainer avatars</dt><dd>Pokémon Showdown trainer sprites (<a href="https://play.pokemonshowdown.com/sprites/trainers/" target="_blank" rel="noopener">play.pokemonshowdown.com</a>), by the Smogon and Pokémon Showdown community.</dd>
+        <dt>Cries and item icons</dt><dd>PokéAPI (<a href="https://pokeapi.co/" target="_blank" rel="noopener">pokeapi.co</a>) and its contributors.</dd>
+        <dt>Pokémon data</dt><dd>Stats, types, learnsets and the damage formula follow the main series games, with learnset data from Pokémon Showdown.</dd>
+        <dt>Title artwork</dt><dd>Supplied by yusmansaidin for this project.</dd>
+        <dt>Engine and libraries</dt><dd>three.js (MIT), JSZip (MIT), PeerJS (MIT) for online battles. Fonts: Barlow and Barlow Condensed (SIL Open Font License).</dd>
+        <dt>Sound effects</dt><dd>Generated live in the browser with the Web Audio API.</dd>
+        <dt>Built with</dt><dd>Claude by Anthropic, and Grok by xAI.</dd>
       </dl>
     </div>
   </div>
@@ -1079,6 +1110,12 @@ body.demo #actions,body.demo #stickZone,body.demo #lookZone,body.demo #lockBtn{d
 <script>if (!window.THREE) { window.__showErr && window.__showErr('Could not load the 3D engine (three.js). Check your internet connection and reload.'); }</script>
 <script>
 'use strict';
+/* ===== BUILD SETTINGS =====
+   BUILD: 'full' = the normal game, 'prototype' = test build (Story locked, everything unlocked, own save + own leaderboard).
+   LEADERBOARD_URL: leave '' when the game is hosted on Cloudflare Pages with _worker.js; or put the Cloudflare address, e.g. 'https://pokemon-duel.pages.dev'. */
+const BUILD = 'prototype';
+const LEADERBOARD_URL = '';
+const IS_PROTO = BUILD === 'prototype';
 const $ = s => document.querySelector(s);
 const TAU = Math.PI * 2;
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
@@ -1871,16 +1908,25 @@ async function idbPut(k, v) { try { await idbDo('readwrite', s => s.put(v, k)); 
 /* ================= scene ================= */
 const appEl = $('#app'), stageEl = $('#stage');
 /* WebGL: try the best settings first, then lighter ones; explain clearly if the browser refuses WebGL */
+function glDiag() {
+  const out = []; const c = document.createElement('canvas');
+  c.addEventListener('webglcontextcreationerror', e => { if (e.statusMessage) out.push(e.statusMessage); }, false);
+  let ok2 = false, ok1 = false;
+  try { ok2 = !!c.getContext('webgl2'); } catch (e) { out.push(String(e.message || e)); }
+  if (!ok2) { const c1 = document.createElement('canvas'); c1.addEventListener('webglcontextcreationerror', e => { if (e.statusMessage) out.push(e.statusMessage); }, false); try { ok1 = !!(c1.getContext('webgl') || c1.getContext('experimental-webgl')); } catch (e) { out.push(String(e.message || e)); } }
+  return `WebGL2 ${ok2 ? 'yes' : 'no'}, WebGL1 ${ok2 || ok1 ? 'yes' : 'no'}${out.length ? '. ' + [...new Set(out)].join(' | ') : ''}. ${navigator.userAgent.replace(/\s*\([^)]*\)\s*/, ' ').slice(0, 90)}`;
+}
 function glHelp(title) {
   const d = document.createElement('div');
   d.style.cssText = 'position:fixed;inset:0;z-index:100000;display:grid;place-items:center;padding:20px;background:#0b0e12;color:#fff;font:15px/1.5 system-ui,sans-serif;text-align:left';
   d.innerHTML = `<div style="max-width:440px"><h2 style="margin:0 0 8px;font-size:22px">${title}</h2><p style="margin:0 0 10px;color:#b9c2cc">The 3D graphics (WebGL) could not start in this browser. Try:</p>
-    <ol style="margin:0 0 14px;padding-left:20px;color:#dfe5ea"><li>Close other tabs and apps, then reload.</li><li>Fully close and reopen the browser (Chrome blocks 3D after a graphics crash until restart).</li><li>Open the link in Chrome itself, not inside WhatsApp, Telegram or Facebook.</li><li>Chrome settings: turn off Lite mode / Data Saver. On PC: Settings, System, "Use graphics acceleration" on.</li></ol>
+    <ol style="margin:0 0 14px;padding-left:20px;color:#dfe5ea"><li>Close other tabs and apps, then reload.</li><li>Fully close and reopen the browser (Chrome blocks 3D after a graphics crash until restart).</li><li>Open the link in Chrome itself, not inside WhatsApp, Telegram or Facebook.</li><li>PC: Chrome Settings, System, turn on "Use graphics acceleration when available", then Relaunch.</li><li>Check <b>get.webgl.org</b>: if the cube does not spin there, the browser or graphics driver is the problem, not the game.</li></ol>
+    <p style="margin:0 0 14px;font-size:12px;color:#8a95a1;word-break:break-word">Details: ${glDiag()}</p>
     <button style="padding:10px 18px;border-radius:10px;border:0;background:#f0b23a;color:#1b1208;font-weight:700;font-size:15px" onclick="location.reload()">Reload</button></div>`;
   document.body.appendChild(d);
 }
 function makeRenderer() {
-  const tries = [{ antialias:true, powerPreference:'high-performance' }, { antialias:false, powerPreference:'default' }, { antialias:false, powerPreference:'low-power', precision:'mediump', depth:true, stencil:false }];
+  const tries = [{ antialias:true, powerPreference:'high-performance' }, { antialias:false, powerPreference:'default' }, { antialias:false, powerPreference:'low-power', precision:'mediump', depth:true, stencil:false, failIfMajorPerformanceCaveat:false }];
   let last = null;
   for (const o of tries) { try { const r = new THREE.WebGLRenderer(o); if (r.getContext()) return r; } catch (e) { last = e; } }
   glHelp('3D graphics are off'); throw last || new Error('WebGL unavailable');
@@ -1899,7 +1945,7 @@ const dynLights = [0, 1, 2].map(() => { const l = new THREE.PointLight('#ff8a3c'
 
 /* ================= arenas ================= */
 const ARENAS = {
-  basalt:{ name:'Basalt Ring', boost:'fire', sky:'#93a7b1', fog:[26, 68], hemi:['#dfe9ee', '#3a3025', 0.85], sun:['#fff0da', 0.7], outer:'#36402f',
+  basalt:{ name:'Pokemon Arena', boost:'fire', sky:'#93a7b1', fog:[26, 68], hemi:['#dfe9ee', '#3a3025', 0.85], sun:['#fff0da', 0.7], outer:'#36402f',
     ground:{ base:'#3d4834', blot:['rgba(90,110,70,.35)', 'rgba(40,48,36,.35)'], floor:'hex', tile:[56, 76, [0, 4, 10]], under:'#30353b', ring:'rgba(232,238,240,.55)', fissure:'#ff9a4a', pools:['#5c8f96', '#2f7684'] },
     props:'columns', propColor:'#30353c', ambient:'steam', river:true, obst:8, grass:6, weather:['sunny','rain'], song:{ seed:7, bpm:152, root:45, mode:'minor' } },
   frost:{ name:'Frost Peak', boost:'ice', sky:'#8fa6b8', fog:[24, 64], hemi:['#d8e6f2', '#4a5c6c', 0.62], sun:['#eef4ff', 0.5], outer:'#9fb2c2', bloomTh:0.97,
@@ -5196,8 +5242,9 @@ const BattleBGM = {
 };
 
 const TITLE_SONG = { key:'title', seed:3, bpm:92, root:55, mode:'major', title:true };
-const prof = store.get('br-profile', { name:'', avatar:'red', wins:0, losses:0, draws:0, survivalBest:0, usage:{}, battles:[], badges:[] });
-const saveSettings = () => store.set('br-settings', settings), saveProfile = () => store.set('br-profile', prof);
+const PROFILE_KEY = IS_PROTO ? 'br-profile-proto' : 'br-profile';
+const prof = store.get(PROFILE_KEY, { name:'', avatar:'red', wins:0, losses:0, draws:0, survivalBest:0, usage:{}, battles:[], badges:[] });
+const saveSettings = () => store.set('br-settings', settings), saveProfile = () => store.set(PROFILE_KEY, prof);
 SFX.on = settings.sound; SFX.musicOn = settings.music; game.diff = settings.diff; game.len = settings.len;
 const TRAINERS = ['red','blue','ethan','lyra','kris','brendan','may','lucas','dawn','hilbert','hilda','nate','rosa','calem','serena','elio','selene','victor','gloria','florian','juliana','cynthia','steven','lance','leon','n','misty','brock','erika','sabrina','giovanni','lysandre','diantha','iris','nemona','kieran'];
 const avURL = id => `https://play.pokemonshowdown.com/sprites/trainers/${id}.png`;
@@ -5238,7 +5285,7 @@ $('#soundBtn').addEventListener('click', () => { settings.sound = SFX.on; saveSe
 /* ---------- screens ---------- */
 let onTitle = true;
 function showScreen(id) {
-  for (const sid of ['start', 'newGame', 'title', 'menu', 'settings', 'profile', 'credits', 'story', 'online']) $('#' + sid).hidden = sid !== id;
+  for (const sid of ['start', 'newGame', 'title', 'menu', 'settings', 'profile', 'credits', 'story', 'online', 'board']) $('#' + sid).hidden = sid !== id;
   for (const sid of ['shop', 'party', 'storyTeam']) $('#' + sid).hidden = true;
   $('#over').hidden = true; $('#hud').hidden = true; document.body.classList.remove('in-battle');
   onTitle = true; game.ai2 = null; document.body.classList.remove('demo');
@@ -5255,7 +5302,10 @@ function showScreen(id) {
 document.querySelectorAll('[data-nav]').forEach(b => b.addEventListener('click', () => { SFX.click(); showScreen(b.dataset.nav); }));
 document.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', () => goMode(b.dataset.go)));
 function goMode(g) {
-  SFX.unlock(); SFX.click(); goFullscreen();
+  SFX.unlock();
+  if (g === 'story' && IS_PROTO) { SFX.deny(); toast('Story Mode is locked in the Prototype'); return; }
+  if (g === 'board') { SFX.click(); openBoard(); return; }
+  SFX.click(); goFullscreen();
   if (g === 'story') openStory(); else if (g === 'shop') openShop(); else if (g === 'online') openOnline(); else if (g === 'single' || g === 'survival') { if (storyState().unlocked.length) openSelect(g); else openStory(); } else if (g === 'demo') startDemo(); else showScreen(g);
 }
 /* ---------- main menu wheel ---------- */
@@ -5298,6 +5348,7 @@ const Wheel = (() => { try {
   });
   items.forEach(b => b.addEventListener('click', e => e.preventDefault()));
   window.addEventListener('resize', layout);
+  if (IS_PROTO) { items[0].classList.add('locked'); pos = target = 1; }
   layout();
   return { layout, focus:() => { try { layout(); el.focus({ preventScroll:true }); } catch (e) {} } };
   } catch (e) { console.warn('[menu wheel]', e); window.__showErr && window.__showErr('Menu: ' + e.message); return { layout() {}, focus() {} }; }
@@ -5319,7 +5370,8 @@ function startNewGame() {
   const name = ($('#ngName').value || '').trim().slice(0, 16) || 'Trainer';
   for (const k of Object.keys(prof)) delete prof[k];
   Object.assign(prof, { name, avatar:ngAv, wins:0, losses:0, draws:0, survivalBest:0, usage:{}, battles:[], badges:[], money:0, story:{ started:false, unlocked:[], cleared:{} } });
-  saveProfile(); sel.team = []; sel.items = {}; SFX.unlock(); goFullscreen(); openStory();
+  saveProfile(); sel.team = []; sel.items = {}; SFX.unlock(); goFullscreen();
+  if (IS_PROTO) { protoUnlock(); LB.hello(); showScreen('title'); } else openStory();
 }
 $('#ngName').addEventListener('input', () => { const el = $('#ngAv .ini'); if (el) el.textContent = (($('#ngName').value || 'T').trim()[0] || 'T').toUpperCase(); });
 $('#ngStart').addEventListener('click', () => { SFX.click(); startNewGame(); });
@@ -5341,7 +5393,7 @@ const roomId = c => 'pkdxb-' + c.toLowerCase();
 function mkCode() { const A = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; let c = ''; for (let i = 0; i < 5; i++) c += A[Math.floor(Math.random() * A.length)]; return c; }
 function netSend(m) { try { if (NET.conn && NET.conn.open) NET.conn.send(m); } catch (e) {} }
 function netStat(t) { const el = $('#onStat'); if (el) el.textContent = t; }
-function myNetInfo() { const team = sel.team.filter(owned).slice(0, 6); if (!team.length) team.push(sel.you); const items = {}; team.forEach(id => { items[id] = sel.items[id] || ''; }); return { name:(prof.name || 'Trainer').slice(0, 16), av:prof.avatar || 'red', team, items, rules:NET.role === 'host' ? NET.rules : undefined, pts:rankState().pts, ranked:!!NET.ranked }; }
+function myNetInfo() { const team = sel.team.filter(owned).slice(0, 6); if (!team.length) team.push(sel.you); const items = {}; team.forEach(id => { items[id] = sel.items[id] || ''; }); return { name:(prof.name || 'Trainer').slice(0, 16), av:prof.avatar || 'red', team, items, rules:NET.role === 'host' ? NET.rules : undefined, pts:rankState().pts, ranked:!!NET.ranked, lb:prof.lbId || '' }; }
 function netClose(quiet) {
   if (!quiet) netSend({ t:'bye' });
   rkStop(); if (NET.ranked) { NET.ranked = false; if (NET.friendRules) NET.rules = NET.friendRules; NET.friendRules = null; }
@@ -5352,6 +5404,7 @@ function netClose(quiet) {
 }
 /* lobby */
 function openOnline() {
+  if (LB.ok === null) LB.hello();
   const mine = storyState().unlocked.filter(id => ROSTER[id]);
   if (!mine.length) { toast('Play Story Mode to get your first Pokémon'); return; }
   if (!owned(sel.you)) sel.you = mine[0];
@@ -5441,7 +5494,7 @@ function onNet(m) {
   if (m.t === 'hello') {
     const team = (Array.isArray(m.team) ? m.team : []).filter(id => ROSTER[id]).slice(0, 6); if (!team.length) team.push('pikachu');
     const items = {}; team.forEach(id => { const it = m.items && m.items[id]; items[id] = typeof it === 'string' ? it : ''; });
-    NET.them = { name:String(m.name || 'Rival').slice(0, 16), av:String(m.av || 'red'), team, items, pts:Math.max(0, Math.min(99999, m.pts | 0)) };
+    NET.them = { name:String(m.name || 'Rival').slice(0, 16), av:String(m.av || 'red'), team, items, pts:Math.max(0, Math.min(99999, m.pts | 0)), lb:String(m.lb || '').slice(0, 32) };
     if (NET.role === 'guest') { if (m.rules) { NET.hostRules = m.rules; renderRules(); } return; }
     const bad = netTeamBad(team, NET.rules);
     if (bad) { netSend({ t:'reject', reason:bad }); netStat(`${NET.them.name} needs to change their team. ${bad}.`); return; }
@@ -5463,12 +5516,14 @@ function netStart() {
   const keys = ARENA_KEYS, ak = settings.arena === 'random' ? keys[Math.floor(Math.random() * keys.length)] : settings.arena, A = ARENAS[ak];
   const weather = A.weather && A.weather.length && Math.random() < 0.55 ? A.weather[Math.floor(Math.random() * A.weather.length)] : '';
   const host = myNetInfo(), R = NET.rules, n = Math.min(R.size, host.team.length, NET.them.team.length), size = n >= 6 ? 6 : n >= 3 ? 3 : 1;
-  const m = { t:'start', ak, weather, host, guest:NET.them, size, fmt:R.fmt, rules:R }; netSend(m); netBegin(m);
+  const mid = NET.ranked ? Math.random().toString(36).slice(2, 10) + Date.now().toString(36) : '';
+  const m = { t:'start', ak, weather, host, guest:NET.them, size, fmt:R.fmt, rules:R, mid }; netSend(m); netBegin(m);
 }
 function netBegin(m) {
   const H = NET.role === 'host', mine = H ? m.host : m.guest, theirs = H ? m.guest : m.host;
   const n = [1, 3, 6].includes(m.size) ? m.size : 1, R = Object.assign({}, NET.rules, m.rules || {});
-  NET.them = theirs; NET.fmt = m.fmt === 'bo3' ? 'bo3' : 'one'; NET.size = n; NET.live = R; NET.rematch = {}; netRoundReset(NET.round + 1);
+  NET.them = theirs; NET.mid = String(m.mid || ''); if (NET.ranked && NET.mid) LB.start(NET.mid, theirs.lb || '');
+  NET.fmt = m.fmt === 'bo3' ? 'bo3' : 'one'; NET.size = n; NET.live = R; NET.rematch = {}; netRoundReset(NET.round + 1);
   goFullscreen(); game.modeType = 'online'; surv.active = false; game.gim = freshGim(); game.moveMap = null;
   game.itemMap = { p:netItems(mine.items, R), o:netItems(theirs.items, R) };
   game.match = { size:n, you:mine.team.slice(0, n), opp:theirs.team.slice(0, n), yi:0, oi:0, online:true };
@@ -5585,7 +5640,7 @@ function rankApply(res) {
   if (!NET.ranked || NET.rankDone) return null; NET.rankDone = true;
   const R = rankState(), from = R.pts, opp = NET.them && NET.them.pts != null ? NET.them.pts : from, d = rankDelta(res, from, opp);
   R.pts = Math.max(0, from + d); R.best = Math.max(R.best, R.pts); if (res === 'win') R.w++; else if (res === 'lose') R.l++;
-  saveProfile(); return { d:R.pts - from, from, to:R.pts };
+  saveProfile(); if (NET.mid) LB.result(NET.mid, res, NET.them ? NET.them.lb : ''); return { d:R.pts - from, from, to:R.pts };
 }
 function rankResultHTML(r) {
   if (!r) return '';
@@ -5597,8 +5652,9 @@ function renderRankCard() {
   const R = rankState(), i = tierIdx(R.pts), T = TIERS[i], nx = TIERS[i + 1], pct = nx ? Math.round((R.pts - T[0]) / (nx[0] - T[0]) * 100) : 100;
   const searching = RK.active && !NET.on, secs = searching ? Math.floor((performance.now() - RK.t0) / 1000) : 0;
   el.innerHTML = `${medalHTML(R.pts, true)}<div class="rkinfo"><div class="rktier">${T[1]}</div><div class="rkpts">${R.pts} pts${nx ? ` <small>${nx[0] - R.pts} to ${nx[1]}</small>` : ''}</div><div class="rkbar"><i style="width:${pct}%"></i></div><div class="rkwl">${R.w} W, ${R.l} L</div></div>` +
-    (searching ? `<div class="rkbtns"><div class="rksearch">Searching… ${secs}s</div><button class="btn" id="rkCancel">Cancel</button></div>` : `<div class="rkbtns"><button class="btn go" id="rkFind">Find Battle</button></div>`);
+    (searching ? `<div class="rkbtns"><div class="rksearch">Searching… ${secs}s</div><button class="btn" id="rkCancel">Cancel</button></div>` : `<div class="rkbtns"><button class="btn go" id="rkFind">Find Battle</button><button class="tiny" id="rkTop">Leaderboard</button></div>`);
   const f = $('#rkFind'); if (f) f.addEventListener('click', () => { SFX.click(); rkFind(); });
+  const tb = $('#rkTop'); if (tb) tb.addEventListener('click', () => { SFX.click(); netClose(true); openBoard(); });
   const c = $('#rkCancel'); if (c) c.addEventListener('click', () => { SFX.click(); rkStop(); netClose(true); netStat(''); renderRankCard(); });
 }
 const RK = { active:false, seat:null, probe:null, t0:0, tick:null, pend:null };
@@ -5688,6 +5744,71 @@ async function rkLoop() {
       if (RK.active && !NET.on) await sleep(4000);
     }
   }
+}
+
+/* ================= SHARED LEADERBOARD (Cloudflare Pages + D1, see _worker.js) ================= */
+const LB_BASE = (LEADERBOARD_URL || '').replace(/\/$/, '') + '/api';
+const LB = {
+  ok:null,
+  async call(p, body) {
+    const opt = body ? { method:'POST', headers:{ 'content-type':'application/json' }, body:JSON.stringify(Object.assign({ board:BUILD }, body)) } : {};
+    const r = await fetch(LB_BASE + p, opt), ct = r.headers.get('content-type') || '';
+    if (!ct.includes('json')) throw new Error('no leaderboard server');
+    const d = await r.json(); if (!r.ok) throw new Error(d.error || 'leaderboard ' + r.status); return d;
+  },
+  sync(d) {
+    if (!d || d.pts == null) return; const R = rankState();
+    R.pts = d.pts; R.w = d.w; R.l = d.l; R.best = Math.max(R.best || 0, d.best || 0, d.pts); saveProfile();
+    if (!$('#online').hidden) renderRankCard();
+  },
+  async hello() {
+    try {
+      const d = await this.call('/hello', { id:prof.lbId || '', key:prof.lbKey || '', name:prof.name || 'Trainer', av:prof.avatar || 'red' });
+      prof.lbId = d.id; prof.lbKey = d.key; this.ok = true;
+      if (d.isNew) { const R = rankState(); if ((R.w + R.l) && !d.pts) { /* fresh server account: start from 0 like everyone else */ } }
+      this.sync(d); return d;
+    } catch (e) { this.ok = false; return null; }
+  },
+  auth() { return { id:prof.lbId, key:prof.lbKey }; },
+  async start(mid, opp) { if (!this.ok || !prof.lbId) return; try { await this.call('/start', Object.assign(this.auth(), { mid, opp })); } catch (e) {} },
+  async result(mid, res, opp) {
+    if (!this.ok || !prof.lbId) return null;
+    try {
+      /* the server only counts a match once both players agree; until then keep the local points */
+      const d = await this.call('/result', Object.assign(this.auth(), { mid, res, opp })); if (d.settled) this.sync(d);
+      else { let n = 0; const poll = async () => { try { const m = await this.call('/me', Object.assign(this.auth(), { mid })); if (m.settled) { this.sync(m); return; } } catch (e) {} if (++n < 6) setTimeout(poll, 5000); }; setTimeout(poll, 3000); }
+      return d;
+    } catch (e) { return null; }
+  },
+  async top() { return this.call(`/top?board=${BUILD}&me=${encodeURIComponent(prof.lbId || '')}`); }
+};
+function openBoard() {
+  showScreen('board'); const el = $('#boardList'); el.innerHTML = '<p class="emptymsg">Loading…</p>';
+  $('#boardSub').textContent = IS_PROTO ? 'Prototype season' : 'Season 1';
+  (async () => {
+    if (LB.ok === null || !prof.lbId) await LB.hello();
+    let d = null; try { d = await LB.top(); LB.ok = true; } catch (e) { LB.ok = false; }
+    if (!d) { el.innerHTML = '<p class="emptymsg">The shared leaderboard needs the game to be hosted on Cloudflare Pages with its database connected. Your own rank still works.</p>'; return; }
+    const row = (p, cls) => `<div class="lbrow ${cls || ''}"><span class="lbn">${p.rank || '–'}</span>${medalHTML(p.pts)}<span class="av lbav"><span class="ini">${esc((p.name || '?')[0])}</span><img src="${avURL(p.av || 'red')}" alt="" onerror="this.remove()"></span><span class="lbname">${esc(p.name || 'Trainer')}</span><span class="lbtier">${tierOf(p.pts)[1]}</span><span class="lbpts">${p.pts}</span><span class="lbwl">${p.w}–${p.l}</span></div>`;
+    let h = d.top.map(p => row(p, p.me ? 'me' : '')).join('');
+    if (d.me && !d.top.some(p => p.me)) h += `<div class="lbgap">…</div>` + row(d.me, 'me');
+    if (!d.top.length) h = '<p class="emptymsg">No ranked battles yet. Be the first!</p>';
+    el.innerHTML = h; $('#boardSub').textContent = `${IS_PROTO ? 'Prototype season' : 'Season 1'}, ${d.total} ranked trainer${d.total === 1 ? '' : 's'}`;
+  })();
+}
+$('#boardBack').addEventListener('click', () => { SFX.click(); showScreen('title'); });
+
+/* ================= PROTOTYPE BUILD: story locked, everything unlocked for testing ================= */
+function protoUnlock() {
+  if (!IS_PROTO) return;
+  const S = storyState(); for (const id of Object.keys(ROSTER)) if (!S.unlocked.includes(id)) S.unlocked.push(id);
+  const B = bag(); B.dmax = 1;
+  for (const k of REGULAR) B[k] = Math.max(B[k] || 0, 6);
+  for (const id of Object.keys(MEGA)) for (const v of Object.keys(MEGA[id])) B[`mega:${id}:${v}`] = 1;
+  for (const t of Object.keys(ZCRYS)) B['z:' + t] = 1;
+  for (const k of TM_LIST) B['tm:' + k] = 1;
+  if ((prof.money || 0) < 99999) prof.money = 99999;
+  saveProfile();
 }
 
 /* cheat: unlock every Pokémon and fill the bag */
@@ -5870,7 +5991,7 @@ function beginMatch(youId, oppId, o = {}) {
   game.mode = 'intro'; game.introT = 2.6; game.introReady = false; game.koWinner = null; game.koAng = null; game.cine = null; game.heartT = 0; fps.t = 0; fps.n = 0; game.hitstop = 0; game.slowmo = 0; game.koT = 0; game.timeout = false; game.timeLeft = settings.time || 0;
   if (game.modeType !== 'demo') { prof.usage[youId] = (prof.usage[youId] || 0) + 1; saveProfile(); }
   cam.yaw = p.facing; cam.snap = true; onTitle = false;
-  for (const sid of ['start', 'newGame', 'title', 'menu', 'settings', 'profile', 'credits', 'story', 'over', 'shop', 'party', 'itemPick', 'online']) $('#' + sid).hidden = true;
+  for (const sid of ['start', 'newGame', 'title', 'menu', 'settings', 'profile', 'credits', 'story', 'over', 'shop', 'party', 'itemPick', 'online', 'board']) $('#' + sid).hidden = true;
   document.body.classList.add('in-battle'); $('#hud').hidden = false; buildHud();
   startIntro(o.intro || 'full', o.sides || { p:true, o:true }); BattleBGM.play(); const _fx = $('#flashfx'); if (_fx) _fx.style.opacity = '0'; clearWeather(); if (o.weather !== undefined) { if (o.weather) setWeather(o.weather); } else pickArenaWeather(); later(0.8, () => { for (const f of game.fighters) onEntryAbility(f); }); // real battle track
 }
@@ -6622,6 +6743,8 @@ function frame(now) {
 }
 
 /* ================= boot ================= */
+if (IS_PROTO) { $('#protoBadge').hidden = false; document.title += ' (Prototype)'; }
+protoUnlock(); if (prof.name) setTimeout(() => LB.hello(), 1500);
 game.modeType = 'single'; buildArena(settings.arena === 'random' ? 'basalt' : settings.arena); setupPost(); renderSlots(); renderRoster(); resize(); setupAttract(); showScreen('start'); requestAnimationFrame(frame);
 ensureSprite(sel.you); ensureSprite(sel.opp);
 ensureModel3D(sel.you); ensureModel3D(sel.opp);
@@ -6635,4 +6758,3 @@ if (location.protocol === 'file:') {
 </script>
 </body>
 </html>
-
